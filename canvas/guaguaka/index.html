@@ -11,9 +11,21 @@
     </style>
 </head>
 <body>
+<form>
+    <input type="text" placeholder="请添加奖项">
+    <button>添加奖项</button>
+</form>
+<div>
+    奖池列表
+</div>
+<hr>
+<button>开始刮奖</button>
+
 <canvas id="canvas"></canvas>
 
 <script>
+    // todo 设置合理的自动全部刮开数字
+    // todo 完成刮奖流程，自动生成刮奖图片
     let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
     let img = new Image();
