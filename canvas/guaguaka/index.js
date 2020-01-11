@@ -51,16 +51,16 @@ function scrapeInit() {
 
     function juge() {
         let imgd = ctx.getImageData(0, 0, width, height).data;
-        let area = width * height;
+        const area = width * height;
+        const Threshold = Math.floor(area * 0.4)
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width * 4; j+=4) {
                 let a = imgd[i * width * 4 + j + 3];
-                if (a === 0) {
+                if (alpha_c >= Threshold) {
+                    ctx.clearRect(0, 0, width, height);
+                    return;
+                } else if (a === 0) {
                     alpha_c++;
-                    if (alpha_c >= Math.floor(area * 0.4)) {
-                        ctx.clearRect(0, 0, width, height);
-                        return;
-                    }
                 }
             }
         }
