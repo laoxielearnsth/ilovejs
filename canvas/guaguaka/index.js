@@ -9,12 +9,16 @@ let width = canvas.width,
 let alpha_c = 0;
 
 function genBackground(text) {
-    ctx.fillStyle = "white";
-    ctx.font = "40px Arial";
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = "red";
-    ctx.fillText(text, calPosition(text), 130);
-    return `url(${canvas.toDataURL('image/jpeg')})`;
+    let bgcanvas = document.createElement('canvas');
+    bgcanvas.height = height;
+    bgcanvas.width = width;
+    let bgctx = bgcanvas.getContext('2d');
+    bgctx.fillStyle = "white";
+    bgctx.font = "40px Arial";
+    bgctx.fillRect(0, 0, width, height);
+    bgctx.fillStyle = "red";
+    bgctx.fillText(text, calPosition(text), 130);
+    return `url(${bgcanvas.toDataURL('image/jpeg')})`;
 }
 
 function calPosition(text){
@@ -52,7 +56,7 @@ function scrapeInit() {
     function juge() {
         let imgd = ctx.getImageData(0, 0, width, height).data;
         const area = width * height;
-        const Threshold = Math.floor(area * 0.4)
+        const Threshold = Math.floor(area * 0.4);
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width * 4; j+=4) {
                 let a = imgd[i * width * 4 + j + 3];
@@ -82,10 +86,22 @@ function scrapeInit() {
 }
 
 function init() {
-    canvas.style.background = genBackground('奖励香吻一个');
+    let b64 = genBackground('奖励香吻一个');
+    canvas.style.background = b64;
     ctx.fillStyle = "gray";
     ctx.fillRect(0, 0, width, height);
+    canvas.style.display = "block";
     ctx.globalCompositeOperation = "destination-out";
+    scrapeInit();
+}
+
+function reset(text) {
+    ctx.globalCompositeOperation = "destination-over";
+    ctx.fillStyle = "gray";
+    ctx.fillRect(0, 0, width, height);
+    let b64 = genBackground(text);
+    ctx.globalCompositeOperation = "destination-out";
+    canvas.style.background = b64;
     scrapeInit();
 }
 
