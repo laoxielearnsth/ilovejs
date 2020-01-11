@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas 实现呱呱卡效果</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let img = new Image();
+    let lastX, lastY;
+    let mouseDown = false;
+    let flag = false;
+    let p = 0;
+
+    img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.fillStyle = "gray";
+        ctx.fillRect(0, 0, img.width, img.height);
+        canvas.style.background = 'url(https://91happy.oss-cn-shenzhen.aliyuncs.com/imgs/avatar.jpg)';
+        ctx.globalCompositeOperation = "destination-out";
+        init();
+    };
+
+    img.src = 'https://91happy.oss-cn-shenzhen.aliyuncs.com/imgs/avatar.jpg';
+
+    function init() {
+        flag = true;
+
+        canvas.onmousedown = (e) => {
+            if (flag) {
+                mouseDown = true;
+                draw(e.offsetX, e.offsetY, false);
+            }
+        };
+
+        canvas.onmousemove = (e) => {
+            if (flag) {
+                if (mouseDown) {
+                    draw(e.offsetX, e.offsetY, true);
+                }
+            }
+        };
+
+        canvas.onmouseleave = (ev) => {
+            mouseDown = false;
+        };
+
+        canvas.onmouseup = (ev) => {
+            mouseDown = false;
+        };
+
+        function draw(x, y, isDown) {
+            if (isDown) {
+                ctx.beginPath();
+                ctx.strokeStyle = "red";
+                ctx.lineWidth = 40;
+                ctx.lineJoin = "round";
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.closePath();
+                ctx.stroke();
+                p += 1;
+                if (p > 500) {
+                    flag = false;
+                    ctx.clearRect(0, 0, img.width, img.height);
+                }
+            }
+            lastX = x;
+            lastY = y;
+        }
+    }
+</script>
+</body>
+</html>
