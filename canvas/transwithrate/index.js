@@ -26,6 +26,8 @@ function play() {
     worker.postMessage({msg: "play"})
 }
 
-rate.addEventListener("change", (e)=>{
-    box.innerText = "rate:" + e.target.value;
-    worker.postMessage({msg: 'rate', rate: e.target.value});});
+function changeRate() {
+    let rate = document.getElementById('rate').value;
+    box.innerText = "rate:" + rate;
+    worker.postMessage({msg: 'rate', rate: rate});
+}
