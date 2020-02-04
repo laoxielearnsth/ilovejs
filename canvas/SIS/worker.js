@@ -5,7 +5,7 @@
 "use strict";
 
 // 将方格设置为25*25
-const DEEPGRAY = "#a1a1a1";
+// 假设自愈率为50%
 const GRAY = "#e1e1e1";
 const BLUE = "#21c9f3";
 let allGrid, infected;
@@ -63,14 +63,18 @@ function spread() {
             right = [i[0], i[1] + 1];
         let round = [up,down,left,right];
         for (let dir of round){
-            if (dir[0] >= 0 && dir[1] >= 0 && dir[0] < 25 && dir[1] < 25 && allGrid[dir[0]][dir[1]].status === "susceptible" && random()) {
+            if (dir[0] >= 0 && dir[1] >= 0 && dir[0] < 25 && dir[1] < 25 && allGrid[dir[0]][dir[1]].status === "susceptible" && random(rate)) {
                 allGrid[dir[0]][dir[1]].status = "infected";
                 nextRound.push(dir);
                 drawRect(dir[1] * grid_W, dir[0] * grid_W, BLUE, ctx);
             }
         }
-        allGrid[i[0]][i[1]].status = "removed";
-        drawRect(i[1] * grid_W, i[0] * grid_W, DEEPGRAY, ctx)
+        if (random(50)){
+            allGrid[i[0]][i[1]].status = "susceptible";
+            drawRect(i[1] * grid_W, i[0] * grid_W, GRAY, ctx)
+        } else {
+            nextRound.push(i);
+        }
     }
     infected = nextRound;
 }
@@ -99,6 +103,6 @@ function changeStatus(status,row,col) {
     allGrid[row][col].status = status;
 }
 
-function random() {
+function random(rate) {
     return Math.random() * 100 <= rate;
 }

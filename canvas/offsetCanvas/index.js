@@ -7,7 +7,7 @@ var worker2 = null,canvasBitmap, ctxBitmap, canvas, ctx;
 function init() {
     canvasBitmap = document.getElementById('canvas-bitmap');
     ctxBitmap = canvasBitmap.getContext('2d');
-    worker2 = new Worker('./work.js');
+    worker2 = new Worker('./worker.js');
     worker2.postMessage({msg:'init'});
     worker2.onmessage = function (e) {
         ctxBitmap.drawImage(e.data.imageBitmap,0,0);
@@ -15,7 +15,7 @@ function init() {
 }
 
 function redraw() {
-    ctxBitmap.clearRect(0, 0, canvasBitmap.width, canvasBitmap.height)
+    ctxBitmap.clearRect(0, 0, canvasBitmap.width, canvasBitmap.height);
     worker2.postMessage({msg:'draw'});
 }
 

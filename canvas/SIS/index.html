@@ -3,22 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>transmission with rate</title>
+    <title>SIS模型</title>
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
 <div id="introduction">
-    <h1>SIR模型</h1>
+    <h1>SIS模型</h1>
     <ul>
         <li>Susceptible</li>
         <li>Infected</li>
-        <li>Removed</li>
     </ul>
-    <pre>SIR模型是传染病模型中最经典的模型，S表示易感者，I表示感染者，R表示移出者（不具有持续感染性）。
-SIR模型基于一下三个假设：
-1. 人口维持一个常数；
-2. 一个病人于易感者接触必然具有一定的传染力；
-3. 单位时间从染病者中移出的人数与病人数量成正比；
+    <pre>SIS模型与SIR模型不同，SIS模型代表了，易感者->感染者->易感者，适用于会重复感染的疾病，比如感冒这些。
     </pre>
     <canvas id="canvas" width="500" height="500"></canvas>
     <div id="bar">
