@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>transmission with rate</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<p style="width: 500px;margin: 30px auto">传染率不为100时候，的传播模拟</p>
+<canvas id="canvas" width="500" height="500"></canvas>
+<div id="bar">
+    <button onclick="reset()">reset</button>
+    <button onclick="play()">PLAY</button>
+    <button id="step" onclick="step()">step</button>
+</div>
+<div>
+    <input type="range" id="rate" min="0" max="100" value="50">
+    <div id="box">rate: 50</div>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
