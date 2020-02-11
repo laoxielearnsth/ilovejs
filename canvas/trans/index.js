@@ -3,7 +3,7 @@
  * @date 2020-2020/2/4-2:38 下午
  */
 "use strict";
-
+stop();
 let canvas = document.getElementById('canvas');
 let offscreen = canvas.transferControlToOffscreen();
 
