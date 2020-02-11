@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>自定义网格大小</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<div id="introduction">
+    <h1>SIS模型</h1>
+    <ul>
+        <li>Susceptible</li>
+        <li>Infected</li>
+    </ul>
+    <pre>SIS模型与SIR模型不同，SIS模型代表了，易感者->感染者->易感者，适用于会重复感染的疾病，比如感冒这些。
+    </pre>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <div id="bar">
+        <button onclick="reset()">reset</button>
+        <button onclick="play()">PLAY</button>
+        <button id="step" onclick="step()">step</button>
+    </div>
+    <div>
+        <input type="range" id="rate" min="0" max="100" value="50" oninput="changeRate()">
+        <div id="box">rate: 50</div>
+    </div>
+</div>
+<form>
+    <label for="width">长度</label>
+    <input type="text" id="width" value="500">
+    <label for="height">高度</label>
+    <input type="text" id="height" value="500">
+    <label for="gwidth">格子长度</label>
+    <input type="text" id="gwidth" value="20">
+    <label for="gheight">格子高度</label>
+    <input type="text" id="gheight" value="20">
+    <button id="modify">修改</button>
+</form>
+<script src="index.js"></script>
+</body>
+</html>
