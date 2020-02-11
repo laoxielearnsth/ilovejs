@@ -14,7 +14,7 @@
         <li>Infected</li>
         <li>A</li>
     </ul>
-    <pre>SISA模型相比与SIS模型多了一个自发者
+    <pre>SISA模型相比与SIS模型多了一个自发率
     </pre>
     <canvas id="canvas" width="500" height="500"></canvas>
     <div id="bar">
@@ -24,11 +24,11 @@
     </div>
     <div>
         <input type="range" id="rate" min="0" max="100" value="50" oninput="changeRate()">
-        <div id="box">rate: 50</div>
+        <div id="box">传染率: 50</div>
     </div>
     <div>
-        <input type="range" id="selfrate" min="0" max="100" value="10" oninput="changeRate2()">
-        <div id="box2">rate2: 10</div>
+        <input type="range" id="selfrate" min="0" max="100" value="1" oninput="changeRate2()">
+        <div id="box2">自发率: 1</div>
     </div>
 </div>
 <script src="index.js"></script>

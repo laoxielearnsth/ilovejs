@@ -13,7 +13,7 @@ const grid_W = 20;
 let canvas, ctx;
 let globalID;
 let rate = 50;
-let rate2 = 10;
+let rate2 = 1;
 
 onmessage = function (e) {
     let data = e.data;
@@ -57,7 +57,20 @@ function init(bol) {
 }
 
 function spread() {
+    console.time('com');
     let nextRound = [];
+    // 自发
+    for (let r = 0; r < 25; r++) {
+        for (let c = 0; c < 25; c++) {
+            if (allGrid[r][c].status === "susceptible") {
+                if (random(rate2)) {
+                    allGrid[r][c]['status'] = "infected";
+                    infected.push([r, c]);
+                    drawRect(c * grid_W, r * grid_W, BLUE, ctx);
+                }
+            }
+        }
+    }
     for (let i of infected) {
         let up = [i[0] - 1, i[1]],
             down = [i[0] + 1, i[1]],
@@ -71,14 +84,16 @@ function spread() {
                 drawRect(dir[1] * grid_W, dir[0] * grid_W, BLUE, ctx);
             }
         }
-        if (random(50)){
+        // todo 传播完后自愈是否恰当？
+        if (random(90)){
             allGrid[i[0]][i[1]].status = "susceptible";
             drawRect(i[1] * grid_W, i[0] * grid_W, GRAY, ctx)
         } else {
             nextRound.push(i);
         }
-    }
+    };
     infected = nextRound;
+    console.timeEnd('com');
 }
 
 function play() {

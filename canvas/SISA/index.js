@@ -31,12 +31,12 @@ function play() {
 
 function changeRate() {
     let ratev = rate.value;
-    box.innerText = "rate:" + ratev;
+    box.innerText = "传染率:" + ratev;
     worker.postMessage({msg: 'rate', rate: ratev});
 }
 
 function changeRate2() {
     let ratev2 = rate2.value;
-    box2.innerText = "rate:" + ratev2;
+    box2.innerText = "自发率:" + ratev2;
     worker.postMessage({msg:'rate2', rate: ratev2})
 }
