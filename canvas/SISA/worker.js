@@ -83,7 +83,7 @@ function spread() {
             if (random(rate2)) {
                 changeStatus("infected", r, c);
                 infected.push([r, c]);
-                drawRect(r * gwidth, c * gheight, BLUE, ctx);
+                drawRect(c * gwidth, r * gheight, BLUE, ctx);
             }
         }
     }

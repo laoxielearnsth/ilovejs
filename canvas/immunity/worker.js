@@ -76,11 +76,13 @@ function resize(bol, info) {
     }
     ctx.stroke();
     // todo 初始感染者 和 免疫者
+    let removed = 0;
     for (let r = 0; r < r_num; r++) {
         for (let c = 0; c < c_num; c++) {
             if (random(immunity)) {
+                removed += 1;
                 changeStatus("removed", r, c);
-                drawRect(r * gwidth, c * gheight, DEEPGRAY, ctx);
+                drawRect(c * gwidth, r * gheight, DEEPGRAY, ctx);
             }
         }
     }
@@ -97,7 +99,7 @@ function spread() {
             if (random(rate2) && allGrid[r][c].status === "susceptible") {
                 changeStatus("infected", r, c);
                 infected.push([r, c]);
-                drawRect(r * gwidth, c * gheight, BLUE, ctx);
+                drawRect(c * gwidth, r * gheight, BLUE, ctx);
             }
         }
     }
