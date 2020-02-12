@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SISA模型</title>
+    <title>SISa模型</title>
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
 <div id="introduction">
-    <h1>SISA模型</h1>
+    <h1>SISa模型</h1>
     <ul>
         <li>Susceptible</li>
         <li>Infected</li>
-        <li>A</li>
+        <li>ed-Susceptible</li>
+        <li>spontaneous activation</li>
     </ul>
-    <pre>SISA模型相比与SIS模型多了一个自发率
+    <pre>前面的模型都以一个被感染的初始点出发，进行模拟。如果我们觉得刚开始时什么都没有呢？
+为了模拟自发激活这一现象，我们引入了新模型SISa模型。在这个模型中 Susceptible 节点会随机自发变为 infected状态。
     </pre>
     <canvas id="canvas" width="500" height="500"></canvas>
     <div id="bar">
@@ -24,13 +26,24 @@
     </div>
     <div>
         <input type="range" id="rate" min="0" max="100" value="50" oninput="changeRate()">
-        <div id="box">传染率: 50</div>
+        <div id="box">传播率: 50</div>
     </div>
     <div>
-        <input type="range" id="selfrate" min="0" max="100" value="1" oninput="changeRate2()">
+        <input type="range" id="rate2" min="0" max="100" value="1" oninput="changeRate2()">
         <div id="box2">自发率: 1</div>
     </div>
 </div>
+<form style="display: none">
+    <label for="width">长度</label>
+    <input type="text" id="width" value="500">
+    <label for="height">高度</label>
+    <input type="text" id="height" value="500">
+    <label for="gwidth">格子长度</label>
+    <input type="text" id="gwidth" value="20">
+    <label for="gheight">格子高度</label>
+    <input type="text" id="gheight" value="20">
+    <button id="modify">修改</button>
+</form>
 <script src="index.js"></script>
 </body>
 </html>

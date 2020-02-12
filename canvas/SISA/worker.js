@@ -8,48 +8,67 @@
 // 假设自愈率为50%
 const GRAY = "#e1e1e1";
 const BLUE = "#21c9f3";
-let allGrid, infected;
-const grid_W = 20;
+let allGrid, infected =[];
+let gwidth = 20, gheight = 20;
 let canvas, ctx;
 let globalID;
 let rate = 50;
 let rate2 = 1;
+let c_num, r_num;
 
 onmessage = function (e) {
     let data = e.data;
     canvas = canvas ? canvas : data.canvas;
     ctx = ctx ? ctx : canvas.getContext('2d');
-    globalID ? cancelAnimationFrame(globalID) : null;
-    if (data.msg === "init"){
+    if (data.msg === "init") {
         init(true);
     } else if (data.msg === "step") {
+        globalID ? cancelAnimationFrame(globalID) : null;
         spread();
     } else if (data.msg === "reset") {
+        globalID ? cancelAnimationFrame(globalID) : null;
         init(false);
     } else if (data.msg === "play") {
-        play();
+        globalID ? cancelAnimationFrame(globalID) : play();
     } else if (data.msg === "rate") {
         rate = parseInt(data.rate);
     } else if (data.msg === "rate2") {
-        rate2 = parseInt(data.rate);
+        rate2 = parseInt(data.rate)
+    } else if (data.msg === "resize") {
+        globalID ? cancelAnimationFrame(globalID) : null;
+        resize(true, data.info);
     }
 };
 
 function init(bol) {
-    let width = canvas.width,
-        height = canvas.height;
+    resize(bol, {
+        width: 800,
+        height: 800,
+        gwidth: 20,
+        gheight: 20
+    });
+}
+
+function resize(bol, info) {
+    let width = info.width,
+        height = info.height;
+    canvas.width = width;
+    canvas.height = height;
+    c_num = width / info.gwidth;
+    r_num = height / info.gheight;
     if (bol) ctx.translate(0.5, 0.5);
-    allGrid = Array.from({length: 25}, () => (Array.from({length: 25}, (() => ({status: "susceptible"})))));
-    changeStatus("infected", 12, 12);
-    infected = [[12, 12]];
+    allGrid = Array.from({length: r_num}, () => (Array.from({length: c_num}, (() => ({status: "susceptible"})))));
     ctx.fillStyle = GRAY;
     ctx.fillRect(0, 0, width, height);
     ctx.lineWidth = 1;
     ctx.strokeStyle = "white";
     ctx.beginPath();
-    for (let i = 0; i < width; i += grid_W) {
+    // 正方形的话。这里可以合并
+    for (let i = 0; i < width; i += info.gwidth) {
         ctx.moveTo(i, 0);
-        ctx.lineTo(i, width);
+        ctx.lineTo(i, height);
+    }
+    for (let i = 0; i < height; i += info.gheight) {
         ctx.moveTo(0, i);
         ctx.lineTo(width, i);
     }
@@ -57,43 +76,44 @@ function init(bol) {
 }
 
 function spread() {
-    console.time('com');
     let nextRound = [];
-    // 自发
-    for (let r = 0; r < 25; r++) {
-        for (let c = 0; c < 25; c++) {
-            if (allGrid[r][c].status === "susceptible") {
-                if (random(rate2)) {
-                    allGrid[r][c]['status'] = "infected";
-                    infected.push([r, c]);
-                    drawRect(c * grid_W, r * grid_W, BLUE, ctx);
-                }
+    // 自发激活
+    for (let r = 0; r < r_num; r++) {
+        for (let c = 0; c < c_num; c++) {
+            if (random(rate2)) {
+                changeStatus("infected", r, c);
+                infected.push([r, c]);
+                drawRect(r * gwidth, c * gheight, BLUE, ctx);
             }
         }
     }
     for (let i of infected) {
+        let rc = 0;
         let up = [i[0] - 1, i[1]],
             down = [i[0] + 1, i[1]],
             left = [i[0], i[1] - 1],
             right = [i[0], i[1] + 1];
         let round = [up,down,left,right];
         for (let dir of round){
-            if (dir[0] >= 0 && dir[1] >= 0 && dir[0] < 25 && dir[1] < 25 && allGrid[dir[0]][dir[1]].status === "susceptible" && random(rate)) {
-                allGrid[dir[0]][dir[1]].status = "infected";
-                nextRound.push(dir);
-                drawRect(dir[1] * grid_W, dir[0] * grid_W, BLUE, ctx);
+            if (dir[0] >= 0 && dir[1] >= 0 && dir[0] < r_num && dir[1] < c_num) {
+                if (allGrid[dir[0]][dir[1]].status === "infected") {
+                    rc += 1;
+                } else if (allGrid[dir[0]][dir[1]].status === "susceptible" && random(rate)) {
+                    rc += 1;
+                    changeStatus("infected", dir[0], dir[1]);
+                    nextRound.push(dir);
+                    drawRect(dir[1] * gwidth, dir[0] * gheight, BLUE, ctx);
+                }
             }
         }
-        // todo 传播完后自愈是否恰当？
-        if (random(90)){
-            allGrid[i[0]][i[1]].status = "susceptible";
-            drawRect(i[1] * grid_W, i[0] * grid_W, GRAY, ctx)
+        if (random(100 - rate, rc)) {
+            changeStatus("susceptible", i[0], i[1]);
+            drawRect(i[1] * gwidth, i[0] * gheight, GRAY, ctx);
         } else {
             nextRound.push(i);
         }
-    };
+    }
     infected = nextRound;
-    console.timeEnd('com');
 }
 
 function play() {
@@ -120,6 +140,7 @@ function changeStatus(status,row,col) {
     allGrid[row][col].status = status;
 }
 
-function random(rate) {
-    return Math.random() * 100 <= rate;
+function random(rate, times = 1) {
+    rate = (rate / 100) ** times;
+    return Math.random() <= rate;
 }
