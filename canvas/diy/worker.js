@@ -8,7 +8,7 @@
 // 假设自愈率为50%
 const GRAY = "#e1e1e1";
 const BLUE = "#21c9f3";
-let allGrid, infected;
+let allGrid, infected =[];
 let gwidth = 20, gheight = 20;
 let canvas, ctx;
 let globalID;
@@ -69,10 +69,12 @@ function resize(bol, info) {
         ctx.lineTo(width, i);
     }
     ctx.stroke();
-    // todo 初始化被感染块
-    changeStatus("infected", 12, 12);
-    infected = [[12, 12]];
-    drawRect(240, 240, BLUE, ctx);
+    let coors = [[12, 12]];
+    for (let coor of coors) {
+        changeStatus("infected", coor[0], coor[1]);
+        infected.push(coor);
+        drawRect(20 * coor[0], 20 * coor[1], BLUE, ctx);
+    }
 }
 
 function spread() {
