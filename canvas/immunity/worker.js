@@ -23,13 +23,13 @@ onmessage = function (e) {
     canvas = canvas ? canvas : data.canvas;
     ctx = ctx ? ctx : canvas.getContext('2d');
     if (data.msg === "init") {
-        init(true);
+        init();
     } else if (data.msg === "step") {
         globalID ? exitPlay(globalID) : null;
         spread();
     } else if (data.msg === "reset") {
         globalID ? exitPlay(globalID) : null;
-        init(false);
+        init();
     } else if (data.msg === "play") {
         globalID ? exitPlay(globalID) : play();
     } else if (data.msg === "rate") {
@@ -39,11 +39,14 @@ onmessage = function (e) {
     } else if (data.msg === "resize") {
         globalID ? exitPlay(globalID) : null;
         resize(true, data.info);
+    } else if (data.msg === "immunity") {
+        immunity = data.rate;
     }
 };
 
-function init(bol) {
-    resize(bol, {
+function init() {
+    infected = [];
+    resize({
         width: 800,
         height: 800,
         gwidth: 20,
@@ -51,14 +54,14 @@ function init(bol) {
     });
 }
 
-function resize(bol, info) {
+function resize(info) {
     let width = info.width,
         height = info.height;
     canvas.width = width;
     canvas.height = height;
     c_num = width / info.gwidth;
     r_num = height / info.gheight;
-    if (bol) ctx.translate(0.5, 0.5);
+    ctx.translate(0.5, 0.5);
     allGrid = Array.from({length: r_num}, () => (Array.from({length: c_num}, (() => ({status: "susceptible"})))));
     ctx.fillStyle = GRAY;
     ctx.fillRect(0, 0, width, height);

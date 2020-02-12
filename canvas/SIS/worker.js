@@ -18,21 +18,23 @@ onmessage = function (e) {
     let data = e.data;
     canvas = canvas ? canvas : data.canvas;
     ctx = ctx ? ctx : canvas.getContext('2d');
-    globalID ? cancelAnimationFrame(globalID) : null;
-    if (data.msg === "init"){
+    if (data.msg === "init") {
         init(true);
     } else if (data.msg === "step") {
+        globalID ? exitPlay(globalID) : null;
         spread();
     } else if (data.msg === "reset") {
+        globalID ? exitPlay(globalID) : null;
         init(false);
     } else if (data.msg === "play") {
-        play();
-    } else if (data.msg === "rate"){
+        globalID ? exitPlay(globalID) : play();
+    } else if (data.msg === "rate") {
         rate = parseInt(data.rate);
     }
 };
 
 function init(bol) {
+    infected = [];
     let width = canvas.width,
         height = canvas.height;
     if (bol) ctx.translate(0.5, 0.5);
@@ -105,4 +107,9 @@ function changeStatus(status,row,col) {
 
 function random(rate) {
     return Math.random() * 100 <= rate;
+}
+
+function exitPlay(id) {
+    cancelAnimationFrame(id);
+    globalID = undefined;
 }

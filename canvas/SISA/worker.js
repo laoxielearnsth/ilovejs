@@ -41,6 +41,7 @@ onmessage = function (e) {
 };
 
 function init(bol) {
+    infected = [];
     resize(bol, {
         width: 800,
         height: 800,
@@ -56,7 +57,7 @@ function resize(bol, info) {
     canvas.height = height;
     c_num = width / info.gwidth;
     r_num = height / info.gheight;
-    if (bol) ctx.translate(0.5, 0.5);
+    ctx.translate(0.5, 0.5);
     allGrid = Array.from({length: r_num}, () => (Array.from({length: c_num}, (() => ({status: "susceptible"})))));
     ctx.fillStyle = GRAY;
     ctx.fillRect(0, 0, width, height);
@@ -83,7 +84,7 @@ function spread() {
             if (random(rate2)) {
                 changeStatus("infected", r, c);
                 infected.push([r, c]);
-                drawRect(c * gwidth + 0.5, r * gheight + 0.5, BLUE, ctx);
+                drawRect(c * gwidth, r * gheight, BLUE, ctx);
             }
         }
     }
@@ -102,13 +103,13 @@ function spread() {
                     rc += 1;
                     changeStatus("infected", dir[0], dir[1]);
                     nextRound.push(dir);
-                    drawRect(dir[1] * gwidth + 0.5, dir[0] * gheight + 0.5, BLUE, ctx);
+                    drawRect(dir[1] * gwidth, dir[0] * gheight, BLUE, ctx);
                 }
             }
         }
         if (random(100 - rate, rc)) {
             changeStatus("susceptible", i[0], i[1]);
-            drawRect(i[1] * gwidth + 0.5, i[0] * gheight + 0.5, GRAY, ctx);
+            drawRect(i[1] * gwidth, i[0] * gheight, GRAY, ctx);
         } else {
             nextRound.push(i);
         }
@@ -121,7 +122,7 @@ function play() {
 }
 
 function animate(timestamp, elapsed) {
-    if (infected.length === 0) return;
+    // if (infected.length === 0) return;
     if (elapsed > 1000 / 8) {
         spread();
         elapsed = 0;
