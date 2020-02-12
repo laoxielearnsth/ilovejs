@@ -83,7 +83,7 @@ function spread() {
             if (random(rate2)) {
                 changeStatus("infected", r, c);
                 infected.push([r, c]);
-                drawRect(c * gwidth, r * gheight, BLUE, ctx);
+                drawRect(c * gwidth + 0.5, r * gheight + 0.5, BLUE, ctx);
             }
         }
     }
@@ -102,13 +102,13 @@ function spread() {
                     rc += 1;
                     changeStatus("infected", dir[0], dir[1]);
                     nextRound.push(dir);
-                    drawRect(dir[1] * gwidth, dir[0] * gheight, BLUE, ctx);
+                    drawRect(dir[1] * gwidth + 0.5, dir[0] * gheight + 0.5, BLUE, ctx);
                 }
             }
         }
         if (random(100 - rate, rc)) {
             changeStatus("susceptible", i[0], i[1]);
-            drawRect(i[1] * gwidth, i[0] * gheight, GRAY, ctx);
+            drawRect(i[1] * gwidth + 0.5, i[0] * gheight + 0.5, GRAY, ctx);
         } else {
             nextRound.push(i);
         }
