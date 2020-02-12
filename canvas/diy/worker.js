@@ -22,22 +22,23 @@ onmessage = function (e) {
     if (data.msg === "init") {
         init(true);
     } else if (data.msg === "step") {
-        globalID ? cancelAnimationFrame(globalID) : null;
+        globalID ? exitPlay(globalID) : null;
         spread();
     } else if (data.msg === "reset") {
-        globalID ? cancelAnimationFrame(globalID) : null;
+        globalID ? exitPlay(globalID) : null;
         init(false);
     } else if (data.msg === "play") {
-        globalID ? cancelAnimationFrame(globalID) : play();
+        globalID ? exitPlay(globalID) : play();
     } else if (data.msg === "rate") {
         rate = parseInt(data.rate);
     } else if (data.msg === "resize") {
-        globalID ? cancelAnimationFrame(globalID) : null;
+        globalID ? exitPlay(globalID) : null;
         resize(true, data.info);
     }
 };
 
 function init(bol) {
+    infected = [];
     resize(bol, {
         width: 800,
         height: 800,
@@ -135,4 +136,9 @@ function changeStatus(status,row,col) {
 function random(rate, times = 1) {
     rate = (rate / 100) ** times;
     return Math.random() <= rate;
+}
+
+function exitPlay(id) {
+    cancelAnimationFrame(id);
+    globalID = undefined;
 }

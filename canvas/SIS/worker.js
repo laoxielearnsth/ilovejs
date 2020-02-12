@@ -37,8 +37,6 @@ function init(bol) {
         height = canvas.height;
     if (bol) ctx.translate(0.5, 0.5);
     allGrid = Array.from({length: 25}, () => (Array.from({length: 25}, (() => ({status: "susceptible"})))));
-    changeStatus("infected", 12, 12);
-    infected = [[12, 12]];
     ctx.fillStyle = GRAY;
     ctx.fillRect(0, 0, width, height);
     ctx.lineWidth = 1;
@@ -51,6 +49,8 @@ function init(bol) {
         ctx.lineTo(width, i);
     }
     ctx.stroke();
+    changeStatus("infected", 12, 12);
+    infected = [[12, 12]];
     drawRect(240, 240, BLUE, ctx);
 }
 

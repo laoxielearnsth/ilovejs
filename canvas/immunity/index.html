@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Immunity</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<div id="introduction">
+    <h1>Immunity免疫</h1>
+    <ul>
+        <li>Susceptible</li>
+        <li>Infected</li>
+        <li>ed-Susceptible</li>
+        <li>spontaneous activation</li>
+        <li>Immunity</li>
+    </ul>
+    <pre>基于SIS模型，假设部分人群是有免疫功能的那么效果会如何呢？
+    </pre>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <div id="bar">
+        <button onclick="reset()">reset</button>
+        <button onclick="play()">PLAY</button>
+        <button id="step" onclick="step()">step</button>
+    </div>
+    <div>
+        <input type="range" id="immunity" min="0" max="100" value="10" oninput="changeImmunity()">
+        <div id="box3">免疫率: 10</div>
+    </div>
+    <div>
+        <input type="range" id="rate" min="0" max="100" value="50" oninput="changeRate()">
+        <div id="box">传播率: 50</div>
+    </div>
+    <div>
+        <input type="range" id="rate2" min="0" max="100" value="0" oninput="changeRate2()">
+        <div id="box2">自发率: 0</div>
+    </div>
+</div>
+<form style="display: none">
+    <label for="width">长度</label>
+    <input type="text" id="width" value="500">
+    <label for="height">高度</label>
+    <input type="text" id="height" value="500">
+    <label for="gwidth">格子长度</label>
+    <input type="text" id="gwidth" value="20">
+    <label for="gheight">格子高度</label>
+    <input type="text" id="gheight" value="20">
+    <button id="modify">修改</button>
+</form>
+<script src="index.js"></script>
+</body>
+</html>

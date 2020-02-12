@@ -8,12 +8,14 @@
 // 假设自愈率为50%
 const GRAY = "#e1e1e1";
 const BLUE = "#21c9f3";
+const DEEPGRAY = "#818181";
 let allGrid, infected =[];
 let gwidth = 20, gheight = 20;
 let canvas, ctx;
 let globalID;
 let rate = 50;
-let rate2 = 1;
+let rate2 = 0;
+let immunity = 10;
 let c_num, r_num;
 
 onmessage = function (e) {
@@ -73,6 +75,18 @@ function resize(bol, info) {
         ctx.lineTo(width, i);
     }
     ctx.stroke();
+    // todo 初始感染者 和 免疫者
+    for (let r = 0; r < r_num; r++) {
+        for (let c = 0; c < c_num; c++) {
+            if (random(immunity)) {
+                changeStatus("removed", r, c);
+                drawRect(r * gwidth, c * gheight, DEEPGRAY, ctx);
+            }
+        }
+    }
+    changeStatus("infected", 12, 12);
+    infected = [[12, 12]];
+    drawRect(240, 240, BLUE, ctx);
 }
 
 function spread() {
@@ -80,7 +94,7 @@ function spread() {
     // 自发激活
     for (let r = 0; r < r_num; r++) {
         for (let c = 0; c < c_num; c++) {
-            if (random(rate2)) {
+            if (random(rate2) && allGrid[r][c].status === "susceptible") {
                 changeStatus("infected", r, c);
                 infected.push([r, c]);
                 drawRect(r * gwidth, c * gheight, BLUE, ctx);
