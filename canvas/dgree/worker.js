@@ -4,8 +4,6 @@
  */
 "use strict";
 
-// 将方格设置为25*25
-// 假设自愈率为50%
 const GRAY = "#e1e1e1";
 const BLUE = "#21c9f3";
 const DEEPGRAY = "#818181";
@@ -82,19 +80,22 @@ function resize(info) {
     }
     ctx.stroke();
     // todo 初始感染者 和 免疫者
-    let removed = 0;
     for (let r = 0; r < r_num; r++) {
         for (let c = 0; c < c_num; c++) {
             if (random(immunity)) {
-                removed += 1;
                 changeStatus("removed", r, c);
                 drawRect(c * gwidth, r * gheight, DEEPGRAY, ctx);
             }
         }
     }
-    changeStatus("infected", 12, 12);
-    infected = [[12, 12]];
-    drawRect(240, 240, BLUE, ctx);
+    let coors = [[19, 19], [19, 20], [19, 21],
+        [20, 19], [20, 20], [20, 21],
+        [21, 19], [21, 20], [21, 21]];
+    for (let coor of coors) {
+        changeStatus("infected", coor[0], coor[1]);
+        infected.push(coor);
+        drawRect(coor[1] * gwidth, coor[0] * gheight, BLUE, ctx);
+    }
 }
 
 function spread() {
@@ -119,7 +120,8 @@ function spread() {
             ld = [i[0] - 1, i[1] + 1],
             ru = [i[0] + 1, i[1] - 1],
             rd = [i[0] + 1, i[1] + 1];
-        let round = [up, down, left, right, lu, ld, ru, rd].slice(0, degree);
+        let all = [up, down, left, right, lu, ld, ru, rd];
+        let round = choice(all, degree);
         for (let dir of round){
             if (dir[0] >= 0 && dir[1] >= 0 && dir[0] < r_num && dir[1] < c_num) {
                 if (allGrid[dir[0]][dir[1]].status === "infected") {
@@ -174,4 +176,23 @@ function random(rate, times = 1) {
 function exitPlay(id) {
     cancelAnimationFrame(id);
     globalID = undefined;
+}
+
+function choice(arr, nums, repeat=false) {
+    let res = [];
+    if (arr.length === 0) return [];
+    if (repeat){
+        let start = parseInt(Math.random() * arr.length);
+        res.push(arr.slice(start));
+    } else {
+        if (arr.length <= nums) {
+            return arr;
+        } else {
+            while (res.length < nums) {
+                let start = parseInt(Math.random() * arr.length);
+                res.push(arr.splice(start, 1)[0]);
+            }
+        }
+    }
+    return res;
 }

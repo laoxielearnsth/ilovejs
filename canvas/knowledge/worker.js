@@ -24,6 +24,10 @@ let rate2 = 0;
 let immunity = 5;
 let c_num, r_num;
 let raws = [[10, 10], [10, 30], [30, 30], [30, 10]];
+let grids;
+let s = 4;
+let highestlv = 1;
+
 
 onmessage = function (e) {
     let data = e.data;
@@ -33,7 +37,8 @@ onmessage = function (e) {
         init();
     } else if (data.msg === "step") {
         globalID ? exitPlay(globalID) : null;
-        spread2();
+        test(s);
+        s === 1 ? s = 4 : s--;
     } else if (data.msg === "reset") {
         globalID ? exitPlay(globalID) : null;
         init();
@@ -70,6 +75,8 @@ function resize(info) {
     r_num = height / info.gheight;
     ctx.translate(0.5, 0.5);
     allGrid = Array.from({length: r_num}, () => (Array.from({length: c_num}, (() => ({status: "susceptible", lv: 0})))));
+    grids = Array.from({length: c_num * r_num}, () => ({status: "susceptible", lv: 0}));
+
     ctx.fillStyle = GRAY;
     ctx.fillRect(0, 0, width, height);
     ctx.lineWidth = 1;
@@ -91,6 +98,7 @@ function resize(info) {
                 changeStatus("removed", r, c);
                 changeLV(-1, r, c);
                 drawRect(c * gwidth, r * gheight, DEEPGRAY, ctx);
+                grids[r * width / gwidth + c] = {status: "removed", lv: -1};
             }
         }
     }
@@ -100,6 +108,7 @@ function resize(info) {
         changeLV(i + 1, r, c);
         changeStatus("always", r, c);
         infected[i].push([r, c]);
+        grids[r * width / gwidth + c] = {status: "always", lv: i + 1};
     }
     // initCity([10, 10], 3, 4, C1);
 }
@@ -131,9 +140,10 @@ function spread(index) {
                     rc += 1;
                     changeStatus("infected", dir[0], dir[1]);
                     changeLV(index + 1, dir[0], dir[1]);
+                    drawRect(dir[1] * gwidth, dir[0] * gheight, colorList[index], ctx);
                     nextRound.push(dir);
                     // todo 如何删除被转变的低等级节点
-                    drawRect(dir[1] * gwidth, dir[0] * gheight, colorList[index], ctx);
+
                 }
             }
         }
@@ -148,6 +158,46 @@ function spread(index) {
     infected[index] = nextRound;
 }
 
+// 四轮的话太傻了
+// todo 优化
+function test(lv) {
+    let nextround = JSON.parse(JSON.stringify(grids));
+    for (let i = 0; i < grids.length; i++) {
+        let times = 0;
+        if (0 < grids[i].lv <= lv + 1) {
+            let up = i - r_num,
+                left = i - 1,
+                right = i + 1,
+                down = i + r_num;
+            let round;
+            if (i % c_num === 0) {
+                round = [up, down, right];
+            } else if (i % c_num === c_num - 1) {
+                round = [up, down, left];
+            } else {
+                round = [up, down, left, right];
+            }
+
+            for (let dir of round) {
+                if (dir >= 0 && dir < grids.length && grids[dir].lv !== -1) {
+                    if (grids[dir].lv < highestlv && random(rate)) {
+                        highestlv = Math.max(highestlv, lv);
+                        times += 1;
+                        nextround[dir] = {status: "infected", lv: lv};
+                        drawRect((dir % c_num) * gwidth, Math.floor(dir / c_num) * gheight, colorList[lv - 1], ctx);
+                    }
+                }
+            }
+            // 自愈
+            if (random(100 - rate, times) && grids[i].status !== "always" && grids[i].lv > 0) {
+                drawRect((i % c_num) * gwidth, Math.floor(i / c_num) * gheight, GRAY, ctx);
+                nextround[i] = {status: "susceptible", lv: 0};
+            }
+        }
+    }
+    grids = nextround;
+}
+
 function play() {
     globalID = requestAnimationFrame(timestamp => animate(timestamp, 0));
 }
@@ -155,7 +205,9 @@ function play() {
 function animate(timestamp, elapsed) {
     if (infected.length === 0) return;
     if (elapsed > 1000 / 8) {
-        spread2();
+        for (let i = 4; i > 0; i--) {
+            test(i);
+        }
         elapsed = 0;
     }
     globalID = requestAnimationFrame(_timestamp => animate(_timestamp, elapsed + _timestamp - timestamp));
