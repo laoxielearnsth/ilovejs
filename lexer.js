@@ -17,7 +17,7 @@ let html = `<header>
     <p>
         this is a p
     </p>
-    <img src="./caab7832c425b3af2b3adae747e6f551.png" alt="呜呜呜">
+    <img src="./wenwen.jpeg" alt="呜呜呜">
 </main><footer>
     <address>
         mail: xie5997231@gmail.com<br>
@@ -242,15 +242,18 @@ class DOMTree{
 
     render() {
         let el = document.createElement(this.tagName);
-        for (let prop in this.props) {
+        let props = this.props;
+        for (let prop in props) {
             el.setAttribute(prop, this.props[prop]);
         }
         for (let child of this.children) {
-            if (child instanceof DOMTree) {
-                el.appendChild(this.render(child));
-            } else {
-                el.appendChild(document.createTextNode(child));
-            }
+            let childEl = child instanceof DOMTree ? child.render() : document.createTextNode(child);
+            el.appendChild(childEl);
+            // if (child instanceof DOMTree) {
+            //     el.appendChild(this.render(child));
+            // } else {
+            //     el.appendChild(document.createTextNode(child));
+            // }
         }
         return el;
     }
@@ -278,4 +281,5 @@ for (let item of items) {
     current = stack[stack.length - 1];
 }
 
-console.log(root);
+let app = document.getElementById("app");
+app.appendChild(root.render());
