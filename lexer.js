@@ -199,6 +199,7 @@ class HTMLLexicalParser {
 
     selfCloseingTag(c) {
         if (c === ">") {
+            console.log(this.token);
             this.emitToken(this.token);
             let endToken = new EndTag();
             endToken.name = this.token.name;
@@ -230,5 +231,51 @@ class Attribute {
 
 class Text {}
 
-let p = new HTMLLexicalParser(html);
-console.log(p);
+let items = new HTMLLexicalParser(html).tokens;
+
+class DOMTree{
+    constructor(tagName, props, children) {
+        this.tagName = tagName;
+        this.props = props?props: {};
+        this.children = children?children: [];
+    }
+
+    render() {
+        let el = document.createElement(this.tagName);
+        for (let prop in this.props) {
+            el.setAttribute(prop, this.props[prop]);
+        }
+        for (let child of this.children) {
+            if (child instanceof DOMTree) {
+                el.appendChild(this.render(child));
+            } else {
+                el.appendChild(document.createTextNode(child));
+            }
+        }
+        return el;
+    }
+}
+
+const root = new DOMTree('div');
+
+let stack = [root];
+
+let current = stack[stack.length - 1];
+
+for (let item of items) {
+    if (item instanceof StartTag) {
+        let el = new DOMTree(item.name, item.attrs, []);
+        current.children.push(el);
+        if (item.name === "br" || item.name === "img") {
+        } else {
+            stack.push(el);
+        }
+    } else if (item instanceof EndTag) {
+        stack.pop();
+    } else if (item instanceof Text) {
+        current.children.push(item.value);
+    }
+    current = stack[stack.length - 1];
+}
+
+console.log(root);
