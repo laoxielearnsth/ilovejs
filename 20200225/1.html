@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<style>
+    /* 第一种 浮动*/
+    .parent {
+        background-color: rgba(255,0,0,0.2);
+    }
+    .child {
+        display: inline-block;
+        background-color: rgba(0,255,0,0.2);
+    }
+    .child1 {
+        float: left;
+    }
+    .child2 {
+        float: left;
+    }
+    .child3 {
+        float: right;
+    }
+</style>
+<body>
+<div class="parent" style="width: 200px; height: 20px;">
+    <div class="child child1" style="width: 20px; height: 20px;"></div>
+    <div class="child child2" style="width: 20px; height: 20px;">2</div>
+    <div class="child child3" style="width: 20px; height: 20px;">3</div>
+</div>
+</body>
+</html>

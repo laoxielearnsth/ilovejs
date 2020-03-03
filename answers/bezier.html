@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>贝塞尔曲线</title>
+    <style>
+        #canvas {
+            /*border: black 1px solid;*/
+        }
+        .wrap {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+            align-items: center;
+        }
+        button {
+            margin: 20px 10px;
+            width: 70px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <canvas id="canvas" width="200" height="200"></canvas>
+</div>
+<div class="wrap">
+    <button id="btn">开始播放</button> <button id="save">保存图片</button>
+</div>
+
+<script>
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    let btn = document.getElementById("btn");
+    let percent = 0;
+
+    function drawCurve(cp) {
+        let t = percent / 100;
+        let r = quadraticBezier(cp, t);
+        // todo r转变 r(10,145)
+        r = parseInt(10 + 90* r);
+
+        ctx.clearRect(0, 0, 200, 200);
+        ctx.beginPath();
+        ctx.arc(100, 100, r, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.fill();
+        percent += 1.67;
+    }
+
+    function quadraticBezier(cp, t, p0 = 0, p1 = 1) {
+        let k = 1 - t;
+        return k * k * p0 + 2 * k * t * cp + t * t * p1;
+    }
+
+    btn.onclick = function () {
+        // todo 开始播放
+        ctx.clearRect(0, 0, 200, 200);
+        percent = 0;
+        console.time("draw");
+        // requestAnimationFrame(animate);
+        init();
+    };
+
+    function animate() {
+        if (percent > 100) {
+            console.timeEnd("draw");
+            return
+        }
+        drawCurve(0);
+        requestAnimationFrame(animate);
+    }
+
+    function init() {
+        ctx.beginPath();
+        ctx.arc(100, 100, 1, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    init();
+</script>
+</body>
+</html>
