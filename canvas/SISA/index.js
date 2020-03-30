@@ -37,7 +37,7 @@ function changeRate() {
 
 function changeRate2() {
     let rate2 = document.getElementById('rate2').value;
-    box2.innerText = "自发率: " + rate2;
+    box2.innerText = `自发率: ${rate2}%%`;
     worker.postMessage({msg: 'rate2', rate: rate2});
 }
 

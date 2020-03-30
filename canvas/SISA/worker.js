@@ -13,7 +13,7 @@ let gwidth = 20, gheight = 20;
 let canvas, ctx;
 let globalID;
 let rate = 50;
-let rate2 = 1;
+let rate2 = 0.05;
 let c_num, r_num;
 
 onmessage = function (e) {
@@ -33,7 +33,7 @@ onmessage = function (e) {
     } else if (data.msg === "rate") {
         rate = parseInt(data.rate);
     } else if (data.msg === "rate2") {
-        rate2 = parseInt(data.rate)
+        rate2 = parseInt(data.rate) / 100;
     } else if (data.msg === "resize") {
         globalID ? exitPlay(globalID) : null;
         resize(true, data.info);
