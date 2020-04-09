@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>vue数据绑定</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>{{ obj1.name }}</div>
+    <div>{{ obj1.age }}</div>
+    <div>{{ obj1.sex }}</div>
+    <button @click="add">click</button>
+    <button @click="add2">click2</button>
+    <button @click="add3">click3</button>
+    已经被声明的属性$set不会使他变为响应式
+</div>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            obj1: {
+                name: 'laox',
+                age: 17
+            }
+        },
+        methods: {
+            add() {
+                this.$set(this.obj1, 'sex', 'nan')
+                console.log(this.obj1);
+            },
+            add2() {
+                Object.assign(this.obj1, {sex: 'nan2'})
+                console.log(this.obj1);
+            },
+            add3() {
+                this.obj1 = Object.assign({}, this.obj1, {sex: 'nan3'})
+                console.log(this.obj1);
+            }
+        }
+    })
+</script>
+</body>
+</html>

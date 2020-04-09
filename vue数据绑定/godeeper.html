@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>go deeper</title>
+    <style>
+        .card {
+            height: 150px;
+            margin: 20px 40px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div v-if="type" class="card">
+        <div>cmd: {{ ops.cmd }}</div>
+        <div>value: {{ ops.value }}</div>
+        <div>model: {{ ops.model }}</div>
+        <div>opt: {{ ops.opt}}</div>
+    </div>
+    <div v-else class="card">
+        <div>cmd: {{ ops.cmd }}</div>
+    </div>
+    <button @click="m1">1</button>
+    <button @click="m2">2</button>
+</div>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            type: true,
+            ops: {
+                "cmd": "type",
+                "required": true,
+                "position": {
+                    "xpath": "//*[@id='register']/div[2]/form/fieldset[1]/div[3]/div[1]/input",
+                    "csspath": "div#register > div:nth-of-type(2) > form > fieldset > div:nth-of-type(3) > div > input"
+                },
+                "value": "m4aCEhB",
+                "model": "char",
+                "opt": {
+                    "type": [
+                        "number",
+                        "letter"
+                    ],
+                    "uppercase": true,
+                    "lowercase": true,
+                    "min": 7,
+                    "max": 7,
+                    "prefix": "a-z"
+                }
+            },
+            cache: {}
+        },
+        methods: {
+            m1(){
+                this.type = !this.type;
+                this.ops = this.cache;
+                this.ops.type = 'type';
+                console.log(this.ops);
+            },
+            m2() {
+                this.type = !this.type;
+                this.cache = this.ops;
+                this.ops = {"cmd": 'click'}
+                console.log(this.ops);
+            }
+        }
+    });
+</script>
+</body>
+</html>
