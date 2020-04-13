@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Color Picker</title>
+    <style>
+        #canvas {
+            position: fixed;
+            margin-top: 40px;
+            top: 40px;
+            left: 10px;
+            background-color: #55ACEE;
+        }
+    </style>
+</head>
+<body>
+
+<label for="imgPicker">请上传图片</label>
+<input type="file" id="imgPicker" name="imgPicker" accept="image/*">
+
+<canvas id="canvas"></canvas>
+
+<script>
+    let imgPicker = document.getElementById('imgPicker');
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let img = new Image();
+
+    imgPicker.onchange = function (ev) {
+        let f = ev.target.files[0];
+        console.log(f);
+        let reader = new FileReader();
+        reader.readAsDataURL(f);
+        reader.onload = function (ev) {
+            if( ev.target.readyState == FileReader.DONE) {
+                img.src = ev.target.result;
+                img.onload = function () {
+                    console.log(img.width)
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+    };
+
+    canvas.onmousedown = function (ev) {
+        let x = ev.offsetX,
+            y = ev.offsetY;
+        let dta = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let start = trans(x, y);
+        let r = dta[start],
+            g = dta[start+1],
+            b = dta[start+2],
+            a = dta[start+3];
+        console.log(`rgba(${r},${g},${b},${a})`);
+        let hexColor = rgba2hex(r, g, b, a);
+        console.log(hexColor);
+    }
+
+    function trans(x, y) {
+        let width = canvas.width;
+        return 4 * (y * width + x);
+    }
+
+    function rgba2hex(r, g, b, a) {
+        let res = '#';
+        for (let n of arguments) {
+            res += n.toString(16);
+        }
+        return res;
+    }
+
+
+</script>
+</body>
+</html>
