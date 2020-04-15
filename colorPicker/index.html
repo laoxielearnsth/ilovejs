@@ -6,16 +6,19 @@
     <title>Color Picker</title>
     <style>
         #canvas {
-            position: fixed;
-            margin-top: 40px;
-            top: 40px;
-            left: 10px;
-            background-color: #55ACEE;
+            /* background-color: #55ACEE; */
+            max-width: 900px;
+            max-height: 600px;
         }
-        #box {
-            width: 130px;
+        .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        #color {
             height: 30px;
-            background-color: #55ACEE;
+            width: 200px;
             text-align: center;
             line-height: 30px;
         }
@@ -23,13 +26,16 @@
 </head>
 <body>
 
-<label for="imgPicker">请上传图片</label>
 <input type="file" id="imgPicker" name="imgPicker" accept="image/*">
 
-<canvas id="canvas"></canvas>
+<button id="anyls">analysis</button>
 
-<div id="box">
-    <span id="color">#55ACEE</span>
+<div class="wrap">
+    <canvas id="canvas"></canvas>
+</div>
+
+<div class="wrap">
+    <div id="color">color</span>
 </div>
 
 <script>
@@ -37,19 +43,17 @@
     let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
     let img = new Image();
-    let box = document.getElementById('box');
     let color = document.getElementById('color');
+    let anyls = document.getElementById('anyls');
 
     imgPicker.onchange = function (ev) {
         let f = ev.target.files[0];
-        console.log(f);
         let reader = new FileReader();
         reader.readAsDataURL(f);
         reader.onload = function (ev) {
             if( ev.target.readyState == FileReader.DONE) {
                 img.src = ev.target.result;
                 img.onload = function () {
-                    console.log(img.width)
                     canvas.width = img.width;
                     canvas.height = img.height;
                     ctx.drawImage(img, 0, 0);
@@ -59,8 +63,12 @@
     };
 
     canvas.onmousedown = function (ev) {
-        let x = ev.offsetX,
-            y = ev.offsetY;
+        let scale = 1;
+        if (img.width > 900 || img.height>600){
+            scale = Math.max(canvas.width/900,canvas.height/600);
+        }
+        let x = parseInt(ev.offsetX*scale),
+            y = parseInt(ev.offsetY*scale);
         let dta = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         let start = trans(x, y);
         let r = dta[start],
@@ -69,7 +77,7 @@
             a = dta[start+3];
         let rgba = `rgba(${r},${g},${b},${a})`
         console.log(rgba);
-        box.style.backgroundColor = rgba;
+        color.style.backgroundColor = rgba;
         let hexColor = rgba2hex(r, g, b);
         console.log(hexColor);
         color.innerText = hexColor;
@@ -83,12 +91,24 @@
     function rgba2hex(r, g, b) {
         let res = '#';
         for (let n of arguments) {
-            res += n.toString(16);
+            n = n.toString(16);
+            n.length < 2 ? res += '0' + n : res += n;
         }
         return res;
     }
 
-
+    function colorAnyls() {
+        let res = {};
+        let dta = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        for (let i = 0;i< dta.length; i+=4){
+            let r = dta[i],
+                g = dta[i+1],
+                b = dta[i+2];
+            let c = rgba2hex(r,g,b);
+            res[c] ? res[c] +=1 : res[c] = 1;
+        }
+        return res;
+    }
 </script>
 </body>
 </html>
