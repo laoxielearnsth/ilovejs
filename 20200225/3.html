@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<style>
+    /* Grid布局 */
+    .parent{
+        display: grid;
+        grid-template-columns: 20px 20px 140px 20px;
+        background-color: rgba(255, 0, 0, 0.2);
+    }
+    .child {
+        background-color: rgba(0, 255, 0, 0.2);
+    }
+    .child1 {
+        grid-column-start: 1;
+    }
+    .child2 {
+        grid-column-start: 2;
+    }
+    .child3 {
+        grid-column-start: 4;
+    }
+</style>
+<body>
+<div class="parent" style="width: 200px; height: 20px;">
+    <div class="child child1" style="width: 20px; height: 20px;"></div>
+    <div class="child child2" style="width: 20px; height: 20px;">2</div>
+    <div class="child child3" style="width: 20px; height: 20px;">3</div>
+</div>
+</body>
+</html>

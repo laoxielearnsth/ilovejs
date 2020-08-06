@@ -3,7 +3,7 @@
  * @date 2020-2020/1/14-4:02 下午
  */
 "use strict";
-var worker2 = null,canvasBitmap, ctxBitmap, canvas, ctx;
+let worker2 = null,canvasBitmap, ctxBitmap, canvas, ctx;
 function init() {
     canvasBitmap = document.getElementById('canvas-bitmap');
     ctxBitmap = canvasBitmap.getContext('2d');
@@ -24,8 +24,8 @@ function init2() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for(var i = 0;i < 10000;i ++) {
-        for (var j = 0; j < 1000; j++) {
+    for(let i = 0;i < 10000;i ++) {
+        for (let j = 0; j < 1000; j++) {
             ctx.fillRect(i * 3, j * 3, 2, 2);
         }
     }

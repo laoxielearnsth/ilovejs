@@ -42,7 +42,7 @@ class Maze {
         //每次任意取两个相邻的格子，如果它们不在同一个连通集，
         //则拆掉中间的墙，让它们连在一起成为一个连通集
         while (!this.firstLastLinked() || !this.linkedToFirstCell()) {
-            var cellPairs = this.pickRandomCellPairs();
+            let cellPairs = this.pickRandomCellPairs();
             if (!this.unionSets.sameSet(cellPairs[0], cellPairs[1])) {
                 this.unionSets.unionElement(cellPairs[0], cellPairs[1]);
                 this.addLinkedMap(cellPairs[0], cellPairs[1]);
@@ -55,7 +55,7 @@ class Maze {
     }
 
     linkedToFirstCell() {
-        for (var i = 1; i < this.cells; i++) {
+        for (let i = 1; i < this.cells; i++) {
             if (!this.unionSets.sameSet(0, i)) return false;
         }
         return true;
@@ -63,10 +63,10 @@ class Maze {
 
     //取出随机的两个挨着的格子
     pickRandomCellPairs() {
-        var cell = (Math.random() * this.cells) >> 0;
+        let cell = (Math.random() * this.cells) >> 0;
         //再取一个相邻格子，0 = 上，1 = 右，2 = 下，3 = 左
-        var neiborCells = [];
-        var row = (cell / this.columns) >> 0,
+        let neiborCells = [];
+        let row = (cell / this.columns) >> 0,
             column = cell % this.rows;
         //不是第一排的有上方的相邻元素
         if (row !== 0) {
@@ -82,7 +82,7 @@ class Maze {
         if (column !== this.columns - 1) {
             neiborCells.push(cell + 1);
         }
-        var index = (Math.random() * neiborCells.length) >> 0;
+        let index = (Math.random() * neiborCells.length) >> 0;
         return [cell, neiborCells[index]];
     }
 
@@ -98,16 +98,16 @@ class Maze {
     }
 
     draw() {
-        var linkedMap = this.linkedMap;
-        var cellWidth = this.canvas.width / this.columns,
+        let linkedMap = this.linkedMap;
+        let cellWidth = this.canvas.width / this.columns,
             cellHeight = this.canvas.height / this.rows;
-        var canvasBuffer = document.createElement('canvas');
+        let canvasBuffer = document.createElement('canvas');
         canvasBuffer.width = this.canvas.width;
         canvasBuffer.height = this.canvas.height;
-        var ctx = canvasBuffer.getContext('2d');
+        let ctx = canvasBuffer.getContext('2d');
         ctx.translate(0.5, 0.5);
-        for (var i = 0; i < this.cells; i++) {
-            var row = (i / this.columns) >> 0,
+        for (let i = 0; i < this.cells; i++) {
+            let row = (i / this.columns) >> 0,
                 column = i % this.columns;
             //画右边的竖线
             if (
@@ -151,19 +151,19 @@ class Maze {
     }
 
     calPath() {
-        var pathTable = new Array(this.cells);
-        for (var i = 0; i < pathTable.length; i++) {
+        let pathTable = new Array(this.cells);
+        for (let i = 0; i < pathTable.length; i++) {
             pathTable[i] = { known: false, prevCell: -1 };
         }
         pathTable[0].known = true;
-        var map = this.linkedMap;
+        let map = this.linkedMap;
         //用一个队列存储当前层的节点，先进队列的结点优先处理
-        var unSearchCells = [0];
-        var j = 0;
+        let unSearchCells = [0];
+        let j = 0;
         while (!pathTable[pathTable.length - 1].known) {
             while (unSearchCells.length) {
-                var cell = unSearchCells.pop();
-                for (var i = 0; i < map[cell].length; i++) {
+                let cell = unSearchCells.pop();
+                for (let i = 0; i < map[cell].length; i++) {
                     if (pathTable[map[cell][i]].known) continue;
                     pathTable[map[cell][i]].known = true;
                     pathTable[map[cell][i]].prevCell = cell;
@@ -172,30 +172,30 @@ class Maze {
                 }
             }
         }
-        var cell = this.cells - 1;
-        var path = [cell];
+        let cell = this.cells - 1;
+        let path = [cell];
         while (cell !== 0) {
-            var cell = pathTable[cell].prevCell;
+            let cell = pathTable[cell].prevCell;
             path.push(cell);
         }
         return path;
     }
 
     drawPath(path) {
-        var cellWidth = this.canvas.width / this.columns,
+        let cellWidth = this.canvas.width / this.columns,
             cellHeight = this.canvas.height / this.rows;
-        var canvasBuffer = document.createElement('canvas');
+        let canvasBuffer = document.createElement('canvas');
         canvasBuffer.width = this.canvas.width;
         canvasBuffer.height = this.canvas.height;
-        var ctx = canvasBuffer.getContext('2d');
+        let ctx = canvasBuffer.getContext('2d');
         ctx.moveTo(this.canvas.width - 1, this.canvas.height - cellHeight / 2);
-        for (var i = 0; i < path.length; i++) {
-            var row = Math.floor(path[i] / this.columns);
-            var column = path[i] % this.columns;
-            var row_prev = this.rows - 1;
-            var column_prev = this.columns;
-            var row_next = 0;
-            var column_next = 0;
+        for (let i = 0; i < path.length; i++) {
+            let row = Math.floor(path[i] / this.columns);
+            let column = path[i] % this.columns;
+            let row_prev = this.rows - 1;
+            let column_prev = this.columns;
+            let row_next = 0;
+            let column_next = 0;
             if (i > 0) {
                 row_prev = Math.floor(path[i - 1] / this.columns);
                 column_prev = path[i - 1] % this.columns;
@@ -312,8 +312,8 @@ class Maze {
 
 const column = 50,
     row = 50;
-var canvas = document.getElementById('maze');
-var maze = new Maze(column, row, canvas);
+let canvas = document.getElementById('maze');
+let maze = new Maze(column, row, canvas);
 
 console.time('generate maze');
 maze.generate();
@@ -322,7 +322,7 @@ console.time('draw maze');
 maze.draw();
 console.timeEnd('draw maze');
 console.time('calculate path');
-var path = maze.calPath();
+let path = maze.calPath();
 console.timeEnd('calculate path');
 console.time('draw path');
 maze.drawPath(path);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<style>
+    /* 行内元素之间的换行，空格会被翻译成" "将字体设为0*/
+    .parent{
+        font-size: 0;
+        background-color: rgba(255, 0, 0, 0.2);
+    }
+    .child {
+        font-size: initial;
+        display: inline-flex;
+        background-color: rgba(0, 255, 0, 0.2);
+    }
+    .child1 {
+    }
+    .child2 {
+    }
+    .child3 {
+        position: relative;
+        left: 140px;
+    }
+    .child2::before {
+        content: "";
+    }
+    .child3::before {
+        content: "";
+    }
+</style>
+<body>
+<div class="parent" style="width: 200px; height: 20px;">
+    <div class="child child1" style="width: 20px; height: 20px;"></div>
+    <div class="child child2" style="width: 20px; height: 20px;">2</div>
+    <div class="child child3" style="width: 20px; height: 20px;">3</div>
+</div>
+</body>
+</html>

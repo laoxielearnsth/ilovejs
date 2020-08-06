@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>themes</title>
+    <style>
+        :root {
+            --brand-color: #e10601;
+            --brand-color-light: #e41f1a;
+        }
+        #box {
+            width: 100px;
+            height: 100px;
+            background-color: var(--brand-color);
+        }
+    </style>
+    <link type="text/css" rel="stylesheet/less" href="./style.less" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.8.1/less.min.js" ></script>
+</head>
+<body>
+
+<div id="box"></div>
+
+<!--<select name="" id="slt">-->
+<!--    <option value="">theme1</option>-->
+<!--    <option value="">theme2</option>-->
+<!--    <option value="">theme3</option>-->
+<!--</select>-->
+
+<button id="btn">click</button>
+
+<script type="module">
+    // import a from './style.less';
+    import n from './a.js';
+    // let slt = document.getElementById('slt');
+    //
+    // slt.addEventListener("change", function (ev) {
+    // })
+    let btn = document.getElementById('btn');
+
+    btn.addEventListener('click', function () {
+        console.log('adas')
+    });
+
+    function updateBrandColor (color) {
+        let root = document.documentElement;
+
+        root.style.setProperty('--brand-color', tint(color, 0.1));
+        root.style.setProperty('--brand-color-light', tint(color, 0.1));
+    }
+
+    function tint(color, n) {
+        return '#e41f1a';
+    }
+</script>
+</body>
+</html>

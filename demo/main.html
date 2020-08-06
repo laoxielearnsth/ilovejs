@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>$Title$</title>
+    <title>Title</title>
+    <style>
+        iframe {
+            width: 600px;
+            height: 600px;
+        }
+    </style>
 </head>
 <body>
-$END$
+<iframe src="if.html" frameborder="0"></iframe>
+<iframe src="if1.html" frameborder="0"></iframe>
+
+<script>
+    let tree = {};
+
+    function f(win) {
+        let t = [];
+
+        if (win.frames.length) {
+            let fms = win.frames
+            for (let i=0;i<fms.length;i++) {
+                // t[i] = f(fms[i]);
+
+                let fm = f(fms[i]);
+                t[i] = fm
+            }
+        }
+
+        return t;
+    }
+
+    console.log(f(window))
+</script>
 </body>
 </html>

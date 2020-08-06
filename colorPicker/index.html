@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Color Picker</title>
+    <style>
+        #canvas {
+            /* background-color: #55ACEE; */
+            max-width: 900px;
+            max-height: 600px;
+        }
+        .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        #color {
+            height: 30px;
+            width: 200px;
+            text-align: center;
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<input type="file" id="imgPicker" name="imgPicker" accept="image/*">
+
+<button id="anyls">analysis</button>
+
+<div class="wrap">
+    <canvas id="canvas"></canvas>
+</div>
+
+<div class="wrap">
+    <div id="color">color</span>
+</div>
+
+<script>
+    let imgPicker = document.getElementById('imgPicker');
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let img = new Image();
+    let color = document.getElementById('color');
+    let anyls = document.getElementById('anyls');
+
+    imgPicker.onchange = function (ev) {
+        let f = ev.target.files[0];
+        let reader = new FileReader();
+        reader.readAsDataURL(f);
+        reader.onload = function (ev) {
+            if( ev.target.readyState == FileReader.DONE) {
+                img.src = ev.target.result;
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+    };
+
+    canvas.onmousedown = function (ev) {
+        let scale = 1;
+        if (img.width > 900 || img.height>600){
+            scale = Math.max(canvas.width/900,canvas.height/600);
+        }
+        let x = parseInt(ev.offsetX*scale),
+            y = parseInt(ev.offsetY*scale);
+        let dta = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let start = trans(x, y);
+        let r = dta[start],
+            g = dta[start+1],
+            b = dta[start+2],
+            a = dta[start+3];
+        let rgba = `rgba(${r},${g},${b},${a})`
+        console.log(rgba);
+        color.style.backgroundColor = rgba;
+        let hexColor = rgba2hex(r, g, b);
+        console.log(hexColor);
+        color.innerText = hexColor;
+    }
+
+    function trans(x, y) {
+        let width = canvas.width;
+        return 4 * (y * width + x);
+    }
+
+    function rgba2hex(r, g, b) {
+        let res = '#';
+        for (let n of arguments) {
+            n = n.toString(16);
+            n.length < 2 ? res += '0' + n : res += n;
+        }
+        return res;
+    }
+
+    function colorAnyls() {
+        let res = {};
+        let dta = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        for (let i = 0;i< dta.length; i+=4){
+            let r = dta[i],
+                g = dta[i+1],
+                b = dta[i+2];
+            let c = rgba2hex(r,g,b);
+            res[c] ? res[c] +=1 : res[c] = 1;
+        }
+        return res;
+    }
+</script>
+</body>
+</html>
