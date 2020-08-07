@@ -35,13 +35,13 @@ const f = async (targetWindow, handler, postMsg) => {
         return wrapped;
     }
 
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const wrapped = wrap(handler, resolve, reject);
 
         window.addEventListener('message', wrapped);
-    });
 
-    targetWindow.postMessage(postMsg, '*');
+        targetWindow.postMessage(postMsg, '*');
+    });
 }
 
 export default f;
